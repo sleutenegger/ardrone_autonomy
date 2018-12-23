@@ -41,7 +41,12 @@ extern "C" C_RESULT export_stage_transform(void *cfg, vp_api_io_data_t *in, vp_a
 //    PRINT("In Transform before copy\n");
 //        printf("The size of buffer is %d\n", in->size);
   vp_os_mutex_lock(&video_lock);
-  shared_video_receive_time = ros::Time::now();
+
+  uint32_t *stamp = (uint32_t *)(in->buffers[in->indexBuffer]);
+  shared_video_receive_time = ros::Time(double(*stamp)*1.0e-3);
+  //std::cout << "t2=" << *stamp << std::endl;
+  //parrot_video_encapsulation_t *framePaVE = ((parrot_video_encapsulation_t *)cfg)->globalBuffer;
+  //std::cout << PaVE->timestamp << std::endl;
   memcpy(buffer, in->buffers[0], in->size);
   current_frame_id++;
   if (realtime_video)
@@ -50,7 +55,7 @@ extern "C" C_RESULT export_stage_transform(void *cfg, vp_api_io_data_t *in, vp_a
   }
   vp_os_mutex_unlock(&video_lock);
 //    vp_os_mutex_unlock(&video_update_lock);
-  return (SUCCESS);
+  return (SUCCESS );
 }
 
 extern "C" C_RESULT export_stage_close(void *cfg, vp_api_io_data_t *in, vp_api_io_data_t *out)

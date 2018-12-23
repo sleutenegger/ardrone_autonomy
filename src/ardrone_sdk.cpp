@@ -200,8 +200,14 @@ extern "C"
   C_RESULT navdata_custom_process(const navdata_unpacked_t * const pnd)
   {
     vp_os_mutex_lock(&navdata_lock);
-    shared_navdata_receive_time = ros::Time::now();
+
+
+    //shared_navdata_receive_time = ros::Time::now();
     shared_raw_navdata_ptr = reinterpret_cast<const navdata_unpacked_t*>(pnd);
+
+    uint32_t tMicrosec =
+        (shared_raw_navdata_ptr->navdata_time.time & 0x001FFFFF) + (shared_raw_navdata_ptr->navdata_time.time >> 21) * 1000000;
+    shared_navdata_receive_time = ros::Time(double(tMicrosec)*1.0e-6);
 
     if (realtime_navdata)
     {

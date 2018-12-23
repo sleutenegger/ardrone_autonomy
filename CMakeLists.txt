@@ -74,11 +74,10 @@ catkin_package(
     camera_info_manager
 )
 
-# Build [pathced] ardronelib from an external project
+# Build [patched] ardronelib from an external project
 include(ExternalProject)
 ExternalProject_Add(ardronelib
-    GIT_REPOSITORY git://github.com/AutonomyLab/ardronelib.git
-    GIT_TAG 2f987029c55531e4c0119c3600f9c57f935851ed
+    GIT_REPOSITORY https://github.com/sleutenegger/ardronelib.git
     PREFIX ${CATKIN_DEVEL_PREFIX}
     CONFIGURE_COMMAND echo "No configure"
     BUILD_COMMAND make
@@ -139,6 +138,7 @@ target_link_libraries(
 )
 
 add_dependencies(ardrone_driver ardronelib ${PROJECT_NAME}_gencpp)
+add_dependencies(${PROJECT_NAME}_gencpp ardronelib)
 
 # roslint
 set(ROSLINT_CPP_OPTS "--filter=-runtime/references-runtime/threadsafe_fn")
