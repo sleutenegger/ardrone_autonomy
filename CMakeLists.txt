@@ -80,6 +80,7 @@ ExternalProject_Add(ardronelib
     GIT_REPOSITORY https://github.com/sleutenegger/ardronelib.git
     PREFIX ${CATKIN_DEVEL_PREFIX}
     CONFIGURE_COMMAND echo "No configure"
+    UPDATE_COMMAND ""
     BUILD_COMMAND make
     INSTALL_COMMAND make install INSTALL_PREFIX=${CATKIN_DEVEL_PREFIX}/lib/ardrone
     BUILD_IN_SOURCE 1
