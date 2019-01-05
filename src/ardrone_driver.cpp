@@ -280,6 +280,17 @@ void ARDroneDriver::PublishVideo()
   cinfo_msg_hori.header.frame_id = drone_frame_front_cam;
   cinfo_msg_vert.header.frame_id = drone_frame_bottom_cam;
 
+  // sleutenegger: sync overflown navdata messages (needed if launching this after more than 2048 seconds of ardrone ops)
+  const uint32_t N = static_cast<uint32_t>(shared_video_receive_time.toSec()) / 2048;
+  navdata_time_mutex.lock();
+  if(navdata_time_offset < ros::Duration(N * 2048, 0)) {
+    navdata_time_offset = ros::Duration(N * 2048, 0);
+    ROS_INFO("navdata time sync (expected every N*2048 seconds of operation, N>0)");
+  }
+  navdata_time_mutex.unlock();
+  if(remainder)
+
+
   if (IS_ARDRONE1)
   {
     /*
@@ -534,13 +545,30 @@ void ARDroneDriver::PublishVideo()
   }
 }
 
-void ARDroneDriver::PublishNavdata(const navdata_unpacked_t &navdata_raw, const ros::Time &navdata_receive_time)
+void ARDroneDriver::PublishNavdata(const navdata_unpacked_t &navdata_raw, const ros::Time &navdata_receive_time_raw)
 {
   if (!enabled_legacy_navdata ||
       ((navdata_pub.getNumSubscribers() == 0) &&
        (imu_pub.getNumSubscribers() == 0) &&
        (mag_pub.getNumSubscribers() == 0)))
     return;  // why bother, no one is listening.
+  
+  // sleutenegger: handle timestamp overflow.
+  navdata_time_mutex.lock();
+  ros::Time navdata_receive_time = navdata_receive_time_raw + navdata_time_offset;
+  if(navdata_receive_time-last_navdata_time < ros::Duration(0.0)) {
+    navdata_time_offset += ros::Duration(2048, 0);
+    navdata_receive_time = navdata_receive_time_raw + navdata_time_offset;
+    ROS_INFO("navdata time overflow sync (expected after 2048 seconds of operation)");
+  }
+  if(navdata_receive_time-last_navdata_time < ros::Duration(0.0)) {
+    ROS_WARN("navdata time out of sync");
+  }
+  if(last_navdata_time != ros::Time(0) && navdata_receive_time-last_navdata_time > ros::Duration(0.3)) {
+    ROS_WARN("navdata time sync problem");
+  }
+  last_navdata_time = navdata_receive_time;
+  navdata_time_mutex.unlock();
 
   legacynavdata_msg.header.stamp = navdata_receive_time;
   legacynavdata_msg.header.frame_id = drone_frame_base;

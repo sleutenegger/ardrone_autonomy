@@ -45,6 +45,8 @@ class ARDroneDriver;
 #include <vector>
 #include <string>
 
+#include <boost/thread/mutex.hpp>
+
 // ardronelib
 #include <utils/ardrone_gen_ids.h>
 #include <ardrone_tool/ardrone_version.h>
@@ -137,6 +139,11 @@ private:
   sensor_msgs::Imu imu_msg;
   geometry_msgs::Vector3Stamped mag_msg;
   ardrone_autonomy::Navdata legacynavdata_msg;
+
+  // sleutenegger: handle timestamp overflow (only 11 bits for seconds used by ardrone)
+  boost::mutex navdata_time_mutex;
+  ros::Time last_navdata_time = ros::Time(0);
+  ros::Duration navdata_time_offset = ros::Duration(0);
 
   // odometry (x,y)
   ros::Time last_receive_time;
