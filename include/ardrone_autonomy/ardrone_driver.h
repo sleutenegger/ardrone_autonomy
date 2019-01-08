@@ -49,8 +49,10 @@ class ARDroneDriver;
 
 // ardronelib
 #include <utils/ardrone_gen_ids.h>
+extern "C" {
 #include <ardrone_tool/ardrone_version.h>
 #include <ardrone_tool/ardrone_tool.h>
+}
 
 // Load auto-generated include files for full navdata
 #define NAVDATA_STRUCTS_INCLUDES

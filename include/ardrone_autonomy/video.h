@@ -25,9 +25,9 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 #ifndef ARDRONE_AUTONOMY_VIDEO_H
 #define ARDRONE_AUTONOMY_VIDEO_H
 
+#include <stdint.h>
 #include <ardrone_autonomy/ardrone_sdk.h>
 #include <ardrone_autonomy/ardrone_driver.h>
-#include <stdint.h>
 
 // The maximum memory allocation
 #define MAX_STREAM_WIDTH 640

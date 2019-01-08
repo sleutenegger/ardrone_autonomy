@@ -288,8 +288,6 @@ void ARDroneDriver::PublishVideo()
     ROS_INFO("navdata time sync (expected every N*2048 seconds of operation, N>0)");
   }
   navdata_time_mutex.unlock();
-  if(remainder)
-
 
   if (IS_ARDRONE1)
   {

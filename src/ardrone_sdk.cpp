@@ -22,10 +22,10 @@ OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTE
 ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+#include <stdint.h>
 #include <ardrone_autonomy/ardrone_sdk.h>
 #include <ardrone_autonomy/video.h>
 #include <ardrone_autonomy/teleop_twist.h>
-#include <stdint.h>
 
 const navdata_unpacked_t* shared_raw_navdata_ptr;
 ros::Time shared_navdata_receive_time;
